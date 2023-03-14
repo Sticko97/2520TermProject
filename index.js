@@ -14,6 +14,7 @@ app.use(ejsLayouts);
 app.set("view engine", "ejs");
 
 // Routes start here
+//testing git
 
 app.get("/reminders", reminderController.list);
 
