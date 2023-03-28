@@ -46,7 +46,7 @@ let remindersController = {
     reminderUpdate.description = req.body.description;
     reminderUpdate.completed = req.body.completed === true
     res.redirect("/reminders");
-    // implement this code
+    // implement this code.
   },
 
   delete: (req, res) => {
