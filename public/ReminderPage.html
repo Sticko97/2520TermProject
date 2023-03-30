@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+    <script src="../controller/auth_controller.js" defer></script>
+    <script src="./reminder.js" defer></script>
     <script src="./script.js" defer></script>
     <title>Reminder App</title>
     <!-- Link to Material-UI stylesheets and fonts -->
@@ -39,12 +40,19 @@
                     <input type="time" id="time" required>
                     <label for="tags">Tags (comma-separated):</label>
                     <input type="text" id="tags">
-                    <button type="submit" onclick="createReminder()">Create Reminder</button>
+                    <button type="submit" onClick="handleCreateReminder()">Create Reminder</button>
+
                 </form>
             </div>
         </section>
 
         <section id="view-all-reminders">
+            <div class="container">
+                <h2>Friends' Reminders</h2>
+                <div id="friends-reminders">
+                    <!-- Friends' reminders will be displayed here -->
+                </div>
+            </div>
                 <div class="container">
                 <h2>View All Reminders</h2>
                     <div id="all-reminders">
@@ -56,13 +64,14 @@
         <section id="reminder-associations">
             <div class="container">
                 <h2>Remind Me</h2>
-                <form id="subtask-form">
+                <form id="subtask-form" onsubmit="event.preventDefault(); searchReminderById();">
                     <label for="reminder-id-2">Reminder ID:</label>
                     <input type="number" id="reminder-id-2" required>
                     <label for="subtask">Subtask:</label>
                     <input type="text" id="subtask" required>
-                    <button type="submit">Add Subtask</button>
+                    <button type="submit">Search Reminder</button>
                 </form>
+
 
                 <div id="myDIV" class="header">
                     <h2>My To Do List</h2>
@@ -79,17 +88,18 @@
 
         <section id="social-reminders">
             <div class="container">
-            <h2>Subtasks</h2>
-            <form id="user-search-form">
-                <label for="username">Search users:</label>
-                <input type="text" id="username" required>
-                <button type="submit">Search</button>
-            </form>
-            <!-- Add your content for Social Reminders here -->
+                <h2>Subtasks</h2>
+                <form id="user-search-form">
+                    <label for="username">Search users by email:</label>
+                    <input type="text" id="username" required>
+                    <button type="submit">Search</button>
+                </form>
+                <div id="search-result"></div>
             </div>
         </section>
 
-          
+
+
         <!-- <section id="authentication">
             <div class="container">
             <h2>Authentication</h2>
@@ -105,20 +115,23 @@
         <div class="container">
             <div class="row">
                 <div class="x">
-                <h5>Links</h5>
-                <ul class="list-unstyled">
-                    <li><a href="#">Home</a></li>
-                    <li><a href="#">About</a></li>
-                    <li><a href="#">Contact</a></li>
-                </ul>
+                    <h5>Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#">About</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
                 </div>
                 <div class="x">
-                <h5>Our Address</h5>
-                <address>
-                    555 Seymour St, Vancouver, BC<br>
-                    BCIT<br>
-                    <i class="fa fa-phone fa-lg"></i>: (604) 434-5734<br>
+                    <h5>Our Address</h5>
+                    <address>
+                        555 Seymour St, Vancouver, BC<br>
+                        BCIT<br>
+                        <i class="fa fa-phone fa-lg"></i>: (604) 434-5734<br>
+                    </address>
+                </div>
+            </div>
         </div>
-      </footer>
+    </footer>
 </body>
 </html>

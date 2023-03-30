@@ -1,46 +1,53 @@
-const passport = require('passport');
-const LocalStrategy = require('passport-local').Strategy;
-const User = require('../models/user');
+function findUserByEmail(email) {
+    const users = JSON.parse(localStorage.getItem('users')) || [];
+    return users.find(user => user.email === email);
+}
 
-passport.use(new LocalStrategy({
-        usernameField: 'email'
-    },
-    function(email, password, done) {
-        User.findOne({ email: email }, function(err, user) {
-            if (err) { return done(err); }
-            if (!user) {
-                return done(null, false, { message: 'Incorrect email.' });
-            }
-            if (!user.validatePassword(password)) {
-                return done(null, false, { message: 'Incorrect password.' });
-            }
-            return done(null, user);
-        });
+function register(email, password, name) {
+    const existingUser = findUserByEmail(email);
+    if (existingUser) {
+        return null;
     }
-));
 
-exports.login = function(req, res) {
-    res.render('auth/login', { title: 'Login' });
-};
+    const user = { id: Date.now(), email, password, name };
+    const users = JSON.parse(localStorage.getItem('users')) || [];
+    users.push(user);
+    localStorage.setItem('users', JSON.stringify(users));
 
-exports.register = function(req, res) {
-    res.render('auth/register', { title: 'Register' });
-};
+    return user;
+}
 
-exports.loginSubmit = passport.authenticate('local', {
-    successRedirect: '/dashboard',
-    failureRedirect: '/login',
-    failureFlash: true
-});
+function login(email, password) {
+    const user = findUserByEmail(email);
+    if (user && user.password === password) {
+        return user;
+    }
+    return null;
+}
 
-exports.registerSubmit = function(req, res, next) {
-    const { email } = req.body;
-    const user = new User({ email });
+function getCurrentUser() {
+    return JSON.parse(localStorage.getItem('user'));
+}
 
-    user.hashPassword();
+function addFriend(currentUserId, friendEmail) {
+    const currentUser = JSON.parse(localStorage.getItem('users')).find(user => user.id === currentUserId);
+    const friend = findUserByEmail(friendEmail);
 
-    user.save(function(err) {
-        if (err) { return next(err); }
-        res.redirect('/dashboard');
-    });
-};
+    if (!currentUser || !friend) {
+        return false;
+    }
+
+    currentUser.friends = currentUser.friends || [];
+    if (!currentUser.friends.includes(friend.id)) {
+        currentUser.friends.push(friend.id);
+        updateUsersStorage();
+        return true;
+    }
+
+    return false;
+}
+
+function updateUsersStorage() {
+    const users = JSON.parse(localStorage.getItem('users')) || [];
+    localStorage.setItem('users', JSON.stringify(users));
+}

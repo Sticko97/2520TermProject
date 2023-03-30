@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
-const User = require('../models/user');
-const Reminder = require('../models/reminder');
+const User = require('./user');
+const Reminder = require('./reminder');
 
 mongoose.connect('mongodb://localhost/mydatabase', {
     useNewUrlParser: true,
@@ -33,15 +33,9 @@ function findRemindersByUser(userId, callback) {
     Reminder.find({ user: userId }, callback);
 }
 
-function createReminder(userId, callback) {
-    let description = document.getElementById("reminder-id").value;
-    let title = document.getElementById("title").value;
-    let date = document.getElementById("date").value;
-    let time = document.getElementById("time").value;
-    let tags = document.getElementById("tags").value;
-    const reminder = new Reminder({ title, description, user: userId });
+function createReminder(userId, title, description, date, time, tags, callback) {
+    const reminder = new Reminder({ title, description, user: userId, date, time, tags });
     reminder.save(callback);
-    alert("Reminder created successfully");
 }
 
 function updateReminder(id, updates, callback) {
